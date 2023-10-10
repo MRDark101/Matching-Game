@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Xml.Serialization;
 
 namespace Matching_game
 {
@@ -14,10 +15,10 @@ namespace Matching_game
     {
         Random random = new Random();
 
-        List<string> icons = new List<string>()
-        {
-            "a", "a", "N", "N", "h", "h", "k", "k",
-            "b", "b", "v", "v", "w", "w", "z", "z"
+        List<string> icons = new List<string>() 
+        { 
+            "icon1.jpg", "icon1.jpg", "icon2.jpg", "icon2.jpg", "icon3.jpg", "icon3.jpg", "icon4.jpg", "icon4.jpg",
+            "icon5.jpg", "icon5.jpg", "icon6.jpg", "icon6.jpg", "icon7.jpg", "icon7.jpg", "icon8.jpg", "icon8.jpg"
         };
 
         Label firstClicked = null;
@@ -27,6 +28,8 @@ namespace Matching_game
         int seconds = 0;
         int tenSeconds = 0;
         int minutes = 0;
+
+        int parit = 0;
         public Form1()
         {
             InitializeComponent();
@@ -43,8 +46,7 @@ namespace Matching_game
                 if (iconLabel != null)
                 {
                     int randomNumber = random.Next(icons.Count);
-                    iconLabel.Text = icons[randomNumber];
-                    iconLabel.ForeColor = iconLabel.BackColor;
+                    iconLabel.Text = icons[randomNumber].ToString();
                     icons.RemoveAt(randomNumber);
                 }
             }
@@ -72,41 +74,46 @@ namespace Matching_game
 
             if (clickedLabel != null)
             {
-                // If the clicked label is black, the player clicked
+                // If the clicked label is showing, the player clicked
                 // an icon that's already been revealed --
                 // ignore the click
-                if (clickedLabel.ForeColor == Color.Black)
+                if (clickedLabel.Image != null)
                     return;
 
                 // If firstClicked is null, this is the first icon
                 // in the pair that the player clicked, 
                 // so set firstClicked to the label that the player 
-                // clicked, change its color to black, and return
+                // clicked, change it to visible, and return
                 if (firstClicked == null)
                 {
                     firstClicked = clickedLabel;
-                    firstClicked.ForeColor = Color.Black;
+                    firstClicked.Image = Image.FromFile("images/" + firstClicked.Text);
                     return;
                 }
 
                 // If the player gets this far, the timer isn't
                 // running and firstClicked isn't null,
                 // so this must be the second icon the player clicked
-                // Set its color to black
+                // Set it to be visible
                 secondClicked = clickedLabel;
-                secondClicked.ForeColor = Color.Black;
+                secondClicked.Image = Image.FromFile("images/" + secondClicked.Text);
+                
 
                 CheckForWinner();
 
                 // If the player clicked two matching icons, keep them 
-                // black and reset firstClicked and secondClicked 
+                // visible and reset firstClicked and secondClicked 
                 // so the player can click another icon
                 if (firstClicked.Text == secondClicked.Text)
                 {
+                    parit++;
+                    pisteet.Text = parit.ToString();
+
                     firstClicked = null;
                     secondClicked = null;
-                    return;
+                    return;  
                 }
+
 
                 // If the player gets this far, the player 
                 // clicked two different icons, so start the 
@@ -122,8 +129,8 @@ namespace Matching_game
             timer1.Stop();
 
             // Hide both icons
-            firstClicked.ForeColor = firstClicked.BackColor;
-            secondClicked.ForeColor = secondClicked.BackColor;
+            firstClicked.Image = null;
+            secondClicked.Image = null;
 
             // Reset firstClicked and secondClicked 
             // so the next time a label is
@@ -134,28 +141,11 @@ namespace Matching_game
 
         private void CheckForWinner()
         {
-            // Go through all of the labels in the TableLayoutPanel, 
-            // checking each one to see if its icon is matched
-            foreach (Control control in tableLayoutPanel1.Controls)
+            // Check if you got all the pairs and end the game
+            if (parit == 7)
             {
-                Label iconLabel = control as Label;
-
-                if (iconLabel != null)
-                {
-                    if (iconLabel.ForeColor == iconLabel.BackColor)
-                        return;
-                }
+                End_Game();
             }
-            timer2.Stop();
-
-            // If the loop didn’t return, it didn't find
-            // any unmatched icons
-            // That means the user won. Show a message and close the form
-            MessageBox.Show("You matched all the icons!", "Congratulations");
-
-            AloitusRuutu aloitus = new AloitusRuutu();
-            this.Hide();
-            aloitus.Show();
         }
 
         private void timer2_Tick(object sender, EventArgs e)
@@ -177,6 +167,24 @@ namespace Matching_game
         private void timeLabel_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            
+        }
+
+        private void End_Game()
+        {
+            timer2.Stop();
+            // If the loop didn’t return, it didn't find
+            // any unmatched icons
+            // That means the user won. Show a message and close the form
+            MessageBox.Show("Löysit kaikki parit!", "Hienoa!");
+
+            AloitusRuutu aloitus = new AloitusRuutu();
+            this.Hide();
+            aloitus.Show();
         }
     }
 }

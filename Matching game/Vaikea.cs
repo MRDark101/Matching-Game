@@ -16,14 +16,14 @@ namespace Matching_game
 
         List<string> icons = new List<string>()
         {
-            "a", "a", "b", "b", "c", "c", "d", "d",
-            "e", "e", "f", "f", "g", "g", "h", "h",
-            "i", "i", "j", "j", "k", "k", "l", "l",
-            "m", "m", "n", "n", "o", "o", "p", "p",
-            "q", "q", "r", "r", "s", "s", "t", "t",
-            "u", "u", "v", "v", "w", "w", "x", "x",
-            "y", "y", "z", "z", "A", "A", "B", "B",
-            "C", "C", "D", "D", "E", "E", "F", "F"
+            "icon1.jpg", "icon1.jpg", "icon2.jpg", "icon2.jpg", "icon3.jpg", "icon3.jpg", "icon4.jpg", "icon4.jpg",
+            "icon5.jpg", "icon5.jpg", "icon6.jpg", "icon6.jpg", "icon7.jpg", "icon7.jpg", "icon8.jpg", "icon8.jpg",
+            "icon9.jpg", "icon9.jpg", "icon10.jpg", "icon10.jpg", "icon11.jpg", "icon11.jpg", "icon12.jpg", "icon12.jpg",
+            "icon13.jpg", "icon13.jpg", "icon14.jpg", "icon14.jpg", "icon15.jpg", "icon15.jpg", "icon16.jpg", "icon16.jpg",
+            "icon18.jpg", "icon18.jpg", "icon18.jpg", "icon18.jpg", "icon19.jpg", "icon19.jpg", "icon20.jpg", "icon20.jpg",
+            "icon21.jpg", "icon21.jpg", "icon22.jpg", "icon22.jpg", "icon23.jpg", "icon23.jpg", "icon24.jpg", "icon24.jpg", 
+            "icon25.jpg", "icon25.jpg", "icon26.jpg", "icon26.jpg", "icon27.jpg", "icon27.jpg", "icon28.jpg", "icon28.jpg", 
+            "icon29.jpg", "icon29.jpg", "icon30.jpg", "icon30.jpg", "icon31.jpg", "icon31.jpg", "icon32.jpg", "icon32.jpg"
         };
 
         Label firstClicked = null;
@@ -33,6 +33,8 @@ namespace Matching_game
         int seconds = 0;
         int tenSeconds = 0;
         int minutes = 0;
+
+        int parit = 0;
         public Vaikea()
         {
             InitializeComponent();
@@ -43,14 +45,13 @@ namespace Matching_game
 
         private void AssingIconsToSquares()
         {
-            foreach (Control control in tableLayoutPanel1.Controls)
+            foreach(Control control in tableLayoutPanel1.Controls)
             {
                 Label iconLabel = control as Label;
                 if (iconLabel != null)
                 {
                     int randomNumber = random.Next(icons.Count);
-                    iconLabel.Text = icons[randomNumber];
-                    iconLabel.ForeColor = iconLabel.BackColor;
+                    iconLabel.Text = icons[randomNumber].ToString();
                     icons.RemoveAt(randomNumber);
                 }
             }
@@ -68,41 +69,46 @@ namespace Matching_game
 
             if (clickedLabel != null)
             {
-                // If the clicked label is black, the player clicked
+                // If the clicked label is showing, the player clicked
                 // an icon that's already been revealed --
                 // ignore the click
-                if (clickedLabel.ForeColor == Color.Black)
+                if (clickedLabel.Image != null)
                     return;
 
                 // If firstClicked is null, this is the first icon
                 // in the pair that the player clicked, 
                 // so set firstClicked to the label that the player 
-                // clicked, change its color to black, and return
+                // clicked, change it to visible, and return
                 if (firstClicked == null)
                 {
                     firstClicked = clickedLabel;
-                    firstClicked.ForeColor = Color.Black;
+                    firstClicked.Image = Image.FromFile("images/" + firstClicked.Text);
                     return;
                 }
 
                 // If the player gets this far, the timer isn't
                 // running and firstClicked isn't null,
                 // so this must be the second icon the player clicked
-                // Set its color to black
+                // Set it to be visible
                 secondClicked = clickedLabel;
-                secondClicked.ForeColor = Color.Black;
+                secondClicked.Image = Image.FromFile("images/" + secondClicked.Text);
+
 
                 CheckForWinner();
 
                 // If the player clicked two matching icons, keep them 
-                // black and reset firstClicked and secondClicked 
+                // visible and reset firstClicked and secondClicked 
                 // so the player can click another icon
                 if (firstClicked.Text == secondClicked.Text)
                 {
+                    parit++;
+                    pisteet.Text = parit.ToString();
+
                     firstClicked = null;
                     secondClicked = null;
                     return;
                 }
+
 
                 // If the player gets this far, the player 
                 // clicked two different icons, so start the 
@@ -118,8 +124,8 @@ namespace Matching_game
             timer1.Stop();
 
             // Hide both icons
-            firstClicked.ForeColor = firstClicked.BackColor;
-            secondClicked.ForeColor = secondClicked.BackColor;
+            firstClicked.Image = null;
+            secondClicked.Image = null;
 
             // Reset firstClicked and secondClicked 
             // so the next time a label is
@@ -130,28 +136,11 @@ namespace Matching_game
 
         private void CheckForWinner()
         {
-            // Go through all of the labels in the TableLayoutPanel, 
-            // checking each one to see if its icon is matched
-            foreach (Control control in tableLayoutPanel1.Controls)
+            // Check if you got all the pairs and end the game
+            if (parit == 7)
             {
-                Label iconLabel = control as Label;
-
-                if (iconLabel != null)
-                {
-                    if (iconLabel.ForeColor == iconLabel.BackColor)
-                        return;
-                }
+                End_Game();
             }
-            timer2.Stop();
-
-            // If the loop didn’t return, it didn't find
-            // any unmatched icons
-            // That means the user won. Show a message and close the form
-            MessageBox.Show("You matched all the icons!", "Congratulations");
-
-            AloitusRuutu aloitus = new AloitusRuutu();
-            this.Hide();
-            aloitus.Show();
         }
 
         private void timer2_Tick(object sender, EventArgs e)
@@ -178,6 +167,24 @@ namespace Matching_game
         private void tableLayoutPanel1_Paint(object sender, PaintEventArgs e)
         {
 
+        }
+
+        private void timeLabel_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void End_Game()
+        {
+            timer2.Stop();
+            // If the loop didn’t return, it didn't find
+            // any unmatched icons
+            // That means the user won. Show a message and close the form
+            MessageBox.Show("Löysit kaikki parit!", "Hienoa!");
+
+            AloitusRuutu aloitus = new AloitusRuutu();
+            this.Hide();
+            aloitus.Show();
         }
     }
 }

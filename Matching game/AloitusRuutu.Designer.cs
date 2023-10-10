@@ -30,6 +30,7 @@
         {
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // label1
@@ -57,16 +58,30 @@
             this.label2.Text = "Aloita";
             this.label2.Click += new System.EventHandler(this.label2_Click);
             // 
-            // Aloitus
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.BackColor = System.Drawing.Color.Transparent;
+            this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 36F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label3.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.label3.Location = new System.Drawing.Point(561, 502);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(255, 82);
+            this.label3.TabIndex = 2;
+            this.label3.Text = "Lopeta";
+            this.label3.Click += new System.EventHandler(this.label3_Click);
+            // 
+            // AloitusRuutu
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackgroundImage = global::Matching_game.Properties.Resources.sauliterec;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ClientSize = new System.Drawing.Size(1258, 664);
+            this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
-            this.Name = "Aloitus";
+            this.Name = "AloitusRuutu";
             this.Text = "Aloitus";
             this.Load += new System.EventHandler(this.Aloitus_Load);
             this.ResumeLayout(false);
@@ -78,5 +93,6 @@
 
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label label3;
     }
 }
